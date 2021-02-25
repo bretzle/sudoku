@@ -26,12 +26,12 @@ impl Sudoku {
         ));
     }
 
-	pub fn select(&mut self, pos: (f32, f32)) {
-		self.selected_cell = Some((
+    pub fn select(&mut self, pos: (f32, f32)) {
+        self.selected_cell = Some((
             (pos.0 / Sudoku::SPACING as f32).floor(),
             (pos.1 / Sudoku::SPACING as f32).floor(),
         ));
-	}
+    }
 
     pub fn render(&self) {
         self.draw_board();
@@ -134,6 +134,12 @@ impl Sudoku {
             );
         }
     }
+
+    pub fn input(&mut self, val: u8) {
+        if let Some(pos) = self.selected_cell {
+            self.board.set(pos.0 as usize, pos.1 as usize, val);
+        }
+    }
 }
 
 struct Board {
@@ -167,5 +173,9 @@ impl Board {
 
     fn get(&self, x: usize, y: usize) -> &Cell {
         &self.cells[y][x]
+    }
+
+    fn set(&mut self, x: usize, y: usize, val: u8) {
+        self.cells[y][x].digit = Some(val);
     }
 }

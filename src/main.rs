@@ -21,27 +21,21 @@ async fn main() {
                 game.select(mouse_pos);
             }
 
-            // if is_key_pressed(KeyCode::Key0) {
-            //     game.input(0);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(1);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(2);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(3);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(4);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(5);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(6);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(7);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(8);
-            // } else if is_key_pressed(KeyCode::Key1) {
-            // 	game.input(9);
-            // }
+            if let Some(key) = get_last_key_pressed() {
+                match key {
+                    KeyCode::Key0 | KeyCode::Kp0 => game.input(0),
+                    KeyCode::Key1 | KeyCode::Kp1 => game.input(1),
+                    KeyCode::Key2 | KeyCode::Kp2 => game.input(2),
+                    KeyCode::Key3 | KeyCode::Kp3 => game.input(3),
+                    KeyCode::Key4 | KeyCode::Kp4 => game.input(4),
+                    KeyCode::Key5 | KeyCode::Kp5 => game.input(5),
+                    KeyCode::Key6 | KeyCode::Kp6 => game.input(6),
+                    KeyCode::Key7 | KeyCode::Kp7 => game.input(7),
+                    KeyCode::Key8 | KeyCode::Kp8 => game.input(8),
+                    KeyCode::Key9 | KeyCode::Kp9 => game.input(9),
+                    _ => {}
+                }
+            }
         }
 
         next_frame().await
