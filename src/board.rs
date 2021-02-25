@@ -38,7 +38,7 @@ struct SudokuPuzzle {
 
 impl Board {
     pub fn import() -> Result<Self, Box<dyn Error>> {
-        let puzzle: SudokuPuzzle = serde_json::from_str(include_str!("../boards/basic.sudoku"))?;
+        let puzzle: SudokuPuzzle = serde_json::from_str(include_str!("../assets/boards/basic.sudoku"))?;
 
         let cells = {
             let mut res = [[Cell::default(); 9]; 9];
