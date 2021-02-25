@@ -1,23 +1,61 @@
 use macroquad::prelude::*;
+use sudoku::Sudoku;
 
-#[macroquad::main("Sudoku")]
+#[macroquad::main(config)]
 async fn main() {
-    // util::setup_logging();
-
-	info!("Logger Initialized");
-
-	warn!("warn");
-	debug!("debug");
-	error!("error");
+    let mut game = Sudoku::new();
 
     loop {
-        clear_background(RED);
+        clear_background(WHITE);
 
-        draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        draw_circle(screen_width() - 30.0, screen_height() - 30.0, 15.0, YELLOW);
-        draw_text("HELLO", 20.0, 20.0, 20.0, DARKGRAY);
+        // draw game
+        game.render();
+
+        // controls
+        let mouse_pos = mouse_position();
+
+        {
+            game.hover(mouse_pos);
+
+            if is_mouse_button_pressed(MouseButton::Left) {
+                game.select(mouse_pos);
+            }
+
+            // if is_key_pressed(KeyCode::Key0) {
+            //     game.input(0);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(1);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(2);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(3);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(4);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(5);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(6);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(7);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(8);
+            // } else if is_key_pressed(KeyCode::Key1) {
+            // 	game.input(9);
+            // }
+        }
 
         next_frame().await
+    }
+}
+
+fn config() -> Conf {
+    Conf {
+        window_title: "Sudoku".to_owned(),
+        window_width: 900,
+        window_height: 900,
+        high_dpi: false,
+        fullscreen: false,
+        sample_count: 4,
+        ..Default::default()
     }
 }
