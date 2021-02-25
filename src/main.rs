@@ -5,6 +5,17 @@ use sudoku::Sudoku;
 async fn main() {
     let mut game = Sudoku::new();
 
+    {
+        let mut s = "".to_string();
+        for y in 0..9 {
+            s += &(0..9)
+                .map(|x| game.board.solution[y][x].to_string())
+                .collect::<String>();
+            s += "\n";
+        }
+        debug!("Solution:\n{}", s);
+    }
+
     loop {
         clear_background(WHITE);
 
@@ -23,16 +34,17 @@ async fn main() {
 
             if let Some(key) = get_last_key_pressed() {
                 match key {
-                    KeyCode::Key0 | KeyCode::Kp0 => game.input(0),
-                    KeyCode::Key1 | KeyCode::Kp1 => game.input(1),
-                    KeyCode::Key2 | KeyCode::Kp2 => game.input(2),
-                    KeyCode::Key3 | KeyCode::Kp3 => game.input(3),
-                    KeyCode::Key4 | KeyCode::Kp4 => game.input(4),
-                    KeyCode::Key5 | KeyCode::Kp5 => game.input(5),
-                    KeyCode::Key6 | KeyCode::Kp6 => game.input(6),
-                    KeyCode::Key7 | KeyCode::Kp7 => game.input(7),
-                    KeyCode::Key8 | KeyCode::Kp8 => game.input(8),
-                    KeyCode::Key9 | KeyCode::Kp9 => game.input(9),
+                    KeyCode::Key0 | KeyCode::Kp0 => game.input(Some(0)),
+                    KeyCode::Key1 | KeyCode::Kp1 => game.input(Some(1)),
+                    KeyCode::Key2 | KeyCode::Kp2 => game.input(Some(2)),
+                    KeyCode::Key3 | KeyCode::Kp3 => game.input(Some(3)),
+                    KeyCode::Key4 | KeyCode::Kp4 => game.input(Some(4)),
+                    KeyCode::Key5 | KeyCode::Kp5 => game.input(Some(5)),
+                    KeyCode::Key6 | KeyCode::Kp6 => game.input(Some(6)),
+                    KeyCode::Key7 | KeyCode::Kp7 => game.input(Some(7)),
+                    KeyCode::Key8 | KeyCode::Kp8 => game.input(Some(8)),
+                    KeyCode::Key9 | KeyCode::Kp9 => game.input(Some(9)),
+                    KeyCode::Backspace | KeyCode::Escape => game.input(None),
                     _ => {}
                 }
             }

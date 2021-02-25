@@ -1,7 +1,10 @@
+use board::Board;
 use macroquad::prelude::*;
 
+mod board;
+
 pub struct Sudoku {
-    board: Board,
+    pub board: Board,
     selected_cell: Option<(f32, f32)>,
     hover_cell: Option<(f32, f32)>,
 }
@@ -135,47 +138,14 @@ impl Sudoku {
         }
     }
 
-    pub fn input(&mut self, val: u8) {
+    pub fn input(&mut self, val: Option<u8>) {
         if let Some(pos) = self.selected_cell {
-            self.board.set(pos.0 as usize, pos.1 as usize, val);
+            let x = pos.0 as usize;
+            let y = pos.1 as usize;
+
+            if !self.board.get(x, y).fixed {
+                self.board.set(x, y, val);
+            }
         }
-    }
-}
-
-struct Board {
-    cells: [[Cell; 9]; 9],
-}
-
-#[derive(Clone, Copy)]
-struct Cell {
-    pub digit: Option<u8>,
-    pub fixed: bool,
-}
-
-impl Board {
-    fn new() -> Self {
-        let mut cells = [[Cell {
-            digit: None,
-            fixed: false,
-        }; 9]; 9];
-
-        cells[2][2] = Cell {
-            digit: Some(5),
-            fixed: true,
-        };
-        cells[4][4] = Cell {
-            digit: Some(5),
-            fixed: true,
-        };
-
-        Self { cells }
-    }
-
-    fn get(&self, x: usize, y: usize) -> &Cell {
-        &self.cells[y][x]
-    }
-
-    fn set(&mut self, x: usize, y: usize, val: u8) {
-        self.cells[y][x].digit = Some(val);
     }
 }
