@@ -22,7 +22,7 @@ matrix:
       script:
         - cargo build --target wasm32-unknown-unknown --release
         - cp target/wasm32-unknown-unknown/release/sudoku-bin.wasm www/
-        - cp assets/ www/
+        - cp -r assets/ www/
       deploy:
         provider: pages
         local_dir: deploy
