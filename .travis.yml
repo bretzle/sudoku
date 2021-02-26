@@ -36,6 +36,8 @@ matrix:
       addons:
         firefox: latest
         chrome: stable
+      before_script:
+        - rustup target add wasm32-unknown-unknown
       script:
         - cargo test --all
         - cargo test --all --target wasm32-unknown-unknown
