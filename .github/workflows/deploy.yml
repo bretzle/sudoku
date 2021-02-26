@@ -20,13 +20,10 @@ jobs:
         run: cargo build --target wasm32-unknown-unknown --release
 
       - name: Move wasm
-        run: cp target/wasm32-unknown-unknown/release/sudoku-bin.wasm www/
-
-      - name: Move assets
-        run: cp -r assets/ www/
+        run: cp target/wasm32-unknown-unknown/release/sudoku-bin.wasm resources/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./www
+          publish_dir: ./resources
