@@ -1,0 +1,32 @@
+name: Deploy to Github pages
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+
+      - name: Build
+        run: cargo build --target wasm32-unknown-unknown --release
+
+      - name: Move wasm
+        run: cp target/wasm32-unknown-unknown/release/sudoku-bin.wasm www/
+
+      - name: Move assets
+        run: cp -r assets/ www/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./www
