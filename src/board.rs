@@ -38,7 +38,8 @@ struct SudokuPuzzle {
 
 impl Board {
     pub fn import() -> Result<Self, Box<dyn Error>> {
-        let puzzle: SudokuPuzzle = serde_json::from_str(include_str!("../resources/boards/basic.sudoku"))?;
+        let puzzle: SudokuPuzzle =
+            serde_json::from_str(include_str!("../resources/boards/basic.sudoku"))?;
 
         let cells = {
             let mut res = [[Cell::default(); 9]; 9];
@@ -75,5 +76,21 @@ impl Board {
             cells,
             solution,
         })
+    }
+
+    pub fn check_board(&self) -> bool {
+        for x in 0..9 {
+            for y in 0..9 {
+                match self.cells[y][x].digit {
+                    Some(val) => {
+                        if val != self.solution[y][x] {
+                            return false;
+                        }
+                    }
+                    None => return false,
+                }
+            }
+        }
+        true
     }
 }

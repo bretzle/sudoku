@@ -45,6 +45,8 @@ async fn main() {
                     KeyCode::Key8 | KeyCode::Kp8 => game.input(Some(8)),
                     KeyCode::Key9 | KeyCode::Kp9 => game.input(Some(9)),
                     KeyCode::Backspace | KeyCode::Escape => game.input(None),
+                    KeyCode::KpEnter => info!("{}", game.board.check_board()),
+
                     _ => {}
                 }
             }

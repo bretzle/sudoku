@@ -11,6 +11,13 @@ pub struct Sudoku {
 
 static DIGIT_TEXT: [&str; 10] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
+fn convert_pos(pos: (f32, f32)) -> (f32, f32) {
+    (
+        (pos.0 / Sudoku::SPACING).floor(),
+        (pos.1 / Sudoku::SPACING).floor(),
+    )
+}
+
 impl Sudoku {
     const SPACING: f32 = 100.0;
 
@@ -23,25 +30,40 @@ impl Sudoku {
     }
 
     pub fn hover(&mut self, pos: (f32, f32)) {
-        self.hover_cell = Some((
-            (pos.0 / Sudoku::SPACING as f32).floor(),
-            (pos.1 / Sudoku::SPACING as f32).floor(),
-        ));
+        let (x, y) = convert_pos(pos);
+        if x < 9.0 && y < 9.0 {
+            self.hover_cell = Some((x, y));
+        }
     }
 
     pub fn select(&mut self, pos: (f32, f32)) {
-        self.selected_cell = Some((
-            (pos.0 / Sudoku::SPACING as f32).floor(),
-            (pos.1 / Sudoku::SPACING as f32).floor(),
-        ));
+        let (x, y) = convert_pos(pos);
+        if x < 9.0 && y < 9.0 {
+            self.selected_cell = Some((x, y));
+        }
     }
 
     pub fn render(&self) {
+        self.draw_hover();
+        self.draw_highlights();
         self.draw_board();
+        self.draw_digits();
     }
 
-    fn draw_board(&self) {
-        // hover cell
+    pub fn input(&mut self, val: Option<u8>) {
+        if let Some(pos) = self.selected_cell {
+            let x = pos.0 as usize;
+            let y = pos.1 as usize;
+
+            if !self.board.get(x, y).fixed {
+                self.board.set(x, y, val);
+            }
+        }
+    }
+}
+
+impl Sudoku {
+    fn draw_hover(&self) {
         if let Some(cell) = self.hover_cell {
             draw_rectangle(
                 cell.0 * Self::SPACING,
@@ -51,7 +73,9 @@ impl Sudoku {
                 Color::new(0.95, 0.95, 0.95, 1.0),
             );
         }
+    }
 
+    fn draw_highlights(&self) {
         // draw cells that are fixed
         for y in 0..9 {
             for x in 0..9 {
@@ -99,7 +123,35 @@ impl Sudoku {
                 Color::new(0.8, 0.9, 0.8, 1.0),
             );
         }
+    }
 
+    fn draw_board(&self) {
+        // Draw guides
+        for n in 1..9 {
+            let mut thick = 2.0;
+            if n % 3 == 0 {
+                thick = 8.0;
+            }
+            draw_rectangle(
+                (n as f32) * Self::SPACING - thick / 2.0,
+                0.0,
+                thick / 2.0,
+                Self::SPACING * 9.0,
+                BLACK,
+            );
+            draw_rectangle(
+                0.0,
+                (n as f32) * Self::SPACING - thick / 2.0,
+                Self::SPACING * 9.0,
+                thick / 2.0,
+                BLACK,
+            );
+        }
+
+        draw_rectangle_lines(0.0, 0.0, 900.0, 900.0, 2.0, BLACK);
+    }
+
+    fn draw_digits(&self) {
         // Draw digits
         for y in 0..9 {
             for x in 0..9 {
@@ -112,39 +164,6 @@ impl Sudoku {
                         BLACK,
                     )
                 }
-            }
-        }
-
-        // Draw guides
-        for n in 1..9 {
-            let mut thick = 2.0;
-            if n % 3 == 0 {
-                thick = 8.0;
-            }
-            draw_rectangle(
-                (n as f32) * Self::SPACING - thick / 2.0,
-                0.0,
-                thick / 2.0,
-                screen_height(),
-                Color::new(0.0, 0.0, 0.0, 1.0),
-            );
-            draw_rectangle(
-                0.0,
-                (n as f32) * Self::SPACING - thick / 2.0,
-                screen_width(),
-                thick / 2.0,
-                Color::new(0.0, 0.0, 0.0, 1.0),
-            );
-        }
-    }
-
-    pub fn input(&mut self, val: Option<u8>) {
-        if let Some(pos) = self.selected_cell {
-            let x = pos.0 as usize;
-            let y = pos.1 as usize;
-
-            if !self.board.get(x, y).fixed {
-                self.board.set(x, y, val);
             }
         }
     }
